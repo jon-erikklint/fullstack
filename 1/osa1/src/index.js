@@ -2,19 +2,29 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 const App = () => {
-  const kurssi = 'Half Stack -sovelluskehitys'
-  const osa1 = 'Reactin perusteet'
-  const tehtavia1 = 10
-  const osa2 = 'Tiedonvälitys propseilla'
-  const tehtavia2 = 7
-  const osa3 = 'Komponenttien tila'
-  const tehtavia3 = 14
+  const kurssi = {
+    nimi: 'Half Stack -sovelluskehitys',
+    osat: [
+      {
+        nimi: 'Reactin perusteet',
+        tehtavia: 10
+      },
+      {
+        nimi: 'Tiedonvälitys propseilla',
+        tehtavia: 7
+      },
+      {
+        nimi: 'Komponenttien tila',
+        tehtavia: 14
+      }
+    ]
+  }
 
   return (
     <div>
-      <Otsikko kurssi={kurssi}/>
-      <Sisalto o1={osa1} o2={osa2} o3={osa3} t1={tehtavia1} t2={tehtavia2} t3={tehtavia3}/>
-      <Yhteensa t1={tehtavia1} t2={tehtavia2} t3={tehtavia3}/>
+      <Otsikko kurssi={kurssi.nimi}/>
+      <Sisalto osat={kurssi.osat}/>
+      <Yhteensa osat={kurssi.osat}/>
     </div>
   )
 }
@@ -30,9 +40,9 @@ const Otsikko = props => {
 const Sisalto = props => {
   return (
     <div>
-      <Osa osa={props.o1} tehtavia={props.t1}/>
-      <Osa osa={props.o2} tehtavia={props.t2}/>
-      <Osa osa={props.o3} tehtavia={props.t3}/>
+      <Osa osa={props.osat[0]}/>
+      <Osa osa={props.osat[1]}/>
+      <Osa osa={props.osat[2]}/>
     </div>
   )
 }
@@ -40,15 +50,16 @@ const Sisalto = props => {
 const Osa = p => {
   return (
     <div>
-      <p>{p.osa} {p.tehtavia}</p>
+      <p>{p.osa.nimi} {p.osa.tehtavia}</p>
     </div>
   )
 }
 
 const Yhteensa = props => {
+  let osat = props.osat
   return (
     <div>
-      <p>yhteensä {props.t1 + props.t2 + props.t3} tehtävää</p>
+      <p>yhteensä {osat[0].tehtavia + osat[1].tehtavia + osat[2].tehtavia} tehtävää</p>
     </div>
   )
 }
