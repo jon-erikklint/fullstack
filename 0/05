@@ -1,0 +1,4 @@
+Melkein sama kuin 03. Samat tiedostot haetaan EKALLA kerralla kun sivulle mennään.
+Erot: 
+eka GET: /spa
+js jää odottamaan tapahtumia taustalle
