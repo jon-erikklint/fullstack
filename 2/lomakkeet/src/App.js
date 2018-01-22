@@ -9,7 +9,8 @@ class App extends React.Component {
       persons: [],
       newName: '',
       newNumber: '',
-      filter: ''
+      filter: '',
+      notification: null
     }
   }
 
@@ -25,28 +26,55 @@ class App extends React.Component {
     if(found) {
       if(window.confirm(found.name + ' on jo luettelossa, haluatko päivittää puhelinnumeron?')) {
         personService.update(person, found.id)
-          .then(changedPerson => this.setState({
-            persons: this.state.persons.map(p => p.id === changedPerson.id ? changedPerson : p)
-          }))
+          .then(changedPerson => {
+            this.setState({
+              persons: this.state.persons.map(p => p.id === changedPerson.id ? changedPerson : p),
+              notification: 'henkilön '+person.name+' puhelinnumero muutettu'
+            })
+            this.errorTimeout()
+          })
+          .catch(() => {
+            this.setState({
+              persons: this.state.persons.filter(p => p.id !== found.id),
+              notification: 'henkilö '+person.name+' oli valitettavasti poistettu'
+            })
+            this.errorTimeout()
+          })
       }
       return
     }
 
     personService.create(person)
-      .then(person => this.setState({
-        persons: this.state.persons.concat(person),
-        newName: '',
-        newNumber: ''
-      }))
+      .then(person => {
+        this.setState({
+          persons: this.state.persons.concat(person),
+          newName: '',
+          newNumber: '',
+          notification: 'person '+person.name+' created'
+        })
+        this.errorTimeout()
+      })
   }
 
   remove = personId => () => {
     if(!window.confirm('Haluatko varmasti poistaa henkilön '
         +this.state.persons.find(p => p.id === personId).name)) return
-    personService.remove(personId)
-      .then(this.setState({persons: this.state.persons.filter(
-        person => person.id !== personId
-      )}))
+
+    personService
+      .remove(personId)
+      .then(() => {
+        this.setState(
+          {
+            persons: this.state.persons.filter(
+              person => person.id !== personId),
+            notification: 'henkilö '+this.state.persons.find(p => p.id === personId).name+' poistettu'
+          })
+        this.errorTimeout()
+      })
+  }
+
+  errorTimeout() {
+    setTimeout(() => this.setState({notification: null}), 5000)
   }
 
   formChange = stateName => event => {
@@ -63,6 +91,7 @@ class App extends React.Component {
     return (
       <div>
         <h2>Puhelinluettelo</h2>
+        <Notification message={this.state.notification}/>
         <Input label="rajaa näytettävät" state={this.state} field="filter" formChanger={this.formChange}/>
         <h2>Lisää uusi</h2>
         <AddNew state={this.state} save={this.save} formChanger={this.formChange} />
@@ -95,5 +124,10 @@ const Person = ({person, remove}) =>
     {person.name} {person.number}
     <button onClick={remove(person.id)}>Poista</button>
   </li>
+
+const Notification = ({message}) => 
+  message == null 
+  ? null
+  : <div className="notification">{message}</div>
 
 export default App
