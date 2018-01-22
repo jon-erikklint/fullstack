@@ -1,5 +1,6 @@
 import React from 'react';
-import axios from 'axios';
+
+import personService from './services/persons'
 
 class App extends React.Component {
   constructor(props) {
@@ -13,22 +14,39 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    axios.get('http://localhost:3001/persons')
-    .then(result => this.setState({persons: result.data}))
+    personService.getAll().then(persons => this.setState({persons}))
   }
 
   save = event => {
     event.preventDefault()
 
-    if(this.state.persons.find(person => person.name === this.state.newName)) {
-      alert('Nimi jo listattu')
+    const person = {name: this.state.newName, number: this.state.newNumber}
+    let found = this.state.persons.find(person => person.name === this.state.newName)
+    if(found) {
+      if(window.confirm(found.name + ' on jo luettelossa, haluatko päivittää puhelinnumeron?')) {
+        personService.update(person, found.id)
+          .then(changedPerson => this.setState({
+            persons: this.state.persons.map(p => p.id === changedPerson.id ? changedPerson : p)
+          }))
+      }
       return
     }
 
-    const person = {name: this.state.newName, number: this.state.newNumber}
-    const persons = this.state.persons.concat(person)
+    personService.create(person)
+      .then(person => this.setState({
+        persons: this.state.persons.concat(person),
+        newName: '',
+        newNumber: ''
+      }))
+  }
 
-    this.setState({persons, newName: '', newNumber: ''})
+  remove = personId => () => {
+    if(!window.confirm('Haluatko varmasti poistaa henkilön '
+        +this.state.persons.find(p => p.id === personId).name)) return
+    personService.remove(personId)
+      .then(this.setState({persons: this.state.persons.filter(
+        person => person.id !== personId
+      )}))
   }
 
   formChange = stateName => event => {
@@ -39,7 +57,7 @@ class App extends React.Component {
     const persons = this.state.persons.filter(
       person => person.name.toLocaleLowerCase().includes(this.state.filter.toLocaleLowerCase())
     ).map(
-      person => <Person key={person.name} person={person}/>
+      person => <Person key={person.name} person={person} remove={this.remove}/>
     )
 
     return (
@@ -72,7 +90,10 @@ const Input = ({label, state, field, formChanger}) =>
     <input value={state[field]} onChange={formChanger(field)}/>
   </div>
 
-const Person = ({person}) => 
-  <li>{person.name} {person.number}</li>
+const Person = ({person, remove}) => 
+  <li>
+    {person.name} {person.number}
+    <button onClick={remove(person.id)}>Poista</button>
+  </li>
 
 export default App
