@@ -53,6 +53,10 @@ class App extends React.Component {
           notification: 'person '+person.name+' created'
         })
         this.errorTimeout()
+      }).catch(error => {
+        this.setState({
+          notification: 'virheelliset tiedot'
+        });
       })
   }
 
