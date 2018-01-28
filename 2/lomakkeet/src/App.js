@@ -27,6 +27,7 @@ class App extends React.Component {
       if(window.confirm(found.name + ' on jo luettelossa, haluatko päivittää puhelinnumeron?')) {
         personService.update(person, found.id)
           .then(changedPerson => {
+            console.log(changedPerson, this.state.persons)
             this.setState({
               persons: this.state.persons.map(p => p.id === changedPerson.id ? changedPerson : p),
               notification: 'henkilön '+person.name+' puhelinnumero muutettu'
