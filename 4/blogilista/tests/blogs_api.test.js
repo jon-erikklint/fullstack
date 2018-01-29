@@ -3,7 +3,7 @@ const { app, server } = require('../index')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
-const {findAll, parse, initialBlogs} = require('./test_helper')
+const {findAllBlogs, parseBlog, initialBlogs} = require('./test_helper')
 
 describe('blog-api tests', () => {
   beforeAll(async () => {
@@ -20,7 +20,7 @@ describe('blog-api tests', () => {
   })
 
   test('Kaikkien haku antaa sopivasti', async () => {
-    const blogsInDb = await findAll()
+    const blogsInDb = await findAllBlogs()
 
     const blogs = await api.get('/api/blogs')
 
@@ -28,11 +28,11 @@ describe('blog-api tests', () => {
   })
 
   test('Kaikkien haku sisältää halutut', async () => {
-    const blogsInDb = await findAll()
+    const blogsInDb = await findAllBlogs()
 
     const blogs = await api.get('/api/blogs')
 
-    let blogHelps = blogs.body.map(parse)
+    let blogHelps = blogs.body.map(parseBlog)
 
     expect(blogHelps).toContainEqual(blogsInDb[0])
   })
@@ -48,7 +48,7 @@ describe('blog-api tests', () => {
     test('Lisäys palauttaa uuden', async () => {
       const result = await api.post('/api/blogs').send(newBlog).expect(201)
 
-      expect(parse(result.body)).toEqual(newBlog)
+      expect(parseBlog(result.body)).toEqual(newBlog)
     })
 
     const newBlog2 = {
@@ -59,11 +59,11 @@ describe('blog-api tests', () => {
     }
   
     test('Lisäyksen yhteydessä uusi löytyy kaikista', async () => {
-      const inDb = await findAll()
+      const inDb = await findAllBlogs()
 
       const result = await api.post('/api/blogs').send(newBlog2)
 
-      const newInDb = await findAll()
+      const newInDb = await findAllBlogs()
   
       expect(inDb.length + 1).toBe(newInDb.length)
   
@@ -119,11 +119,11 @@ describe('blog-api tests', () => {
     })
 
     test('Poisto poistaa', async () => {
-      const beforeInDb = await findAll()
+      const beforeInDb = await findAllBlogs()
 
       await api.delete('/api/blogs/'+addedId).expect(204)
 
-      const afterInDb = await findAll()
+      const afterInDb = await findAllBlogs()
 
       expect(afterInDb.length).toBe(beforeInDb.length - 1)
       expect(afterInDb).not.toContainEqual(removeBlog)

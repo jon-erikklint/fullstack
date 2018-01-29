@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initialBlogs = [
   {
@@ -15,18 +16,23 @@ const initialBlogs = [
   }
 ]
 
-parse = blog => ({
+parseBlog = blog => ({
   title: blog.title,
   author: blog.author,
   url: blog.url,
   likes: blog.likes
 })
 
-findAll = async () => {
+findAllBlogs = async () => {
   let blogs = await Blog.find({})
-  return blogs.map(parse)
+  return blogs.map(parseBlog)
+}
+
+findAllUsers = async () => {
+  let users = await User.find({})
+  return users.map(User.format)
 }
 
 module.exports = {
-  initialBlogs, parse, findAll
+  initialBlogs, parseBlog, findAllBlogs, findAllUsers
 }
