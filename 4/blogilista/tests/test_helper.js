@@ -3,15 +3,15 @@ const User = require('../models/user')
 
 const initialBlogs = [
   {
-    title: "Testiblogi1",
-    author: "Testimiäs",
-    url: "testiblogi.com",
+    title: 'Testiblogi1',
+    author: 'Testimiäs',
+    url: 'testiblogi.com',
     likes: 1
   },
   {
-    title: "Testiblogi2",
-    author: "Testimiäs",
-    url: "testiblogi2.com",
+    title: 'Testiblogi2',
+    author: 'Testimiäs',
+    url: 'testiblogi2.com',
     likes: 4
   }
 ]

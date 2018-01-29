@@ -3,7 +3,7 @@ const { app, server } = require('../index')
 const api = supertest(app)
 
 const User= require('../models/user')
-const {findAllUsers} = require('./test_helper')
+const { findAllUsers } = require('./test_helper')
 
 describe('Käyttäjänluontitestit', () => {
   const firstUser = {

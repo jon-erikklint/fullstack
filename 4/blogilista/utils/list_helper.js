@@ -1,11 +1,11 @@
-const dummy = (blogs) => 1
+const dummy = () => 1
 
 const totalLikes = blogs => {
-  return blogs.reduce((sum, blog) => sum += blog.likes, 0);
+  return blogs.reduce((sum, blog) => sum += blog.likes, 0)
 }
 
 const mostLiked = blogs => {
-  return blogs.length === 0 ? null : blogs.reduce((mostLiked, blog) => blog.likes > mostLiked.likes ? blog : mostLiked);
+  return blogs.length === 0 ? null : blogs.reduce((mostLiked, blog) => blog.likes > mostLiked.likes ? blog : mostLiked)
 }
 
 const mostBlogs = blogs => {
@@ -13,11 +13,11 @@ const mostBlogs = blogs => {
 }
 
 const mostLikes = blogs => {
-  return mostThingsInBlogs(blogs, blog => blog.likes, 'likes');
+  return mostThingsInBlogs(blogs, blog => blog.likes, 'likes')
 }
 
 const mostThingsInBlogs = (blogs, amountIncrease, amountName) => {
-  if(blogs.length === 0) return {[amountName]: 0}
+  if(blogs.length === 0) return { [amountName]: 0 }
 
   let amounts = {}
   blogs.forEach(blog => {
@@ -27,10 +27,10 @@ const mostThingsInBlogs = (blogs, amountIncrease, amountName) => {
   })
 
   let bloggers = Object.keys(amounts)
-  let most = bloggers.reduce((biggestAmount, blogger) => 
+  let most = bloggers.reduce((biggestAmount, blogger) =>
     amounts[blogger] > amounts[biggestAmount] ? blogger : biggestAmount)
-  
-  return {name: most, [amountName]: amounts[most]}
+
+  return { name: most, [amountName]: amounts[most] }
 }
 
 module.exports = {

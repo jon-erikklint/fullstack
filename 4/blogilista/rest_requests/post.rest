@@ -1,9 +1,10 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YTZmNGQwNTYyOTA4NzdhYTI0MDcyNjgiLCJ1c2VybmFtZSI6ImtheXR0YWphMiIsImlhdCI6MTUxNzI1OTM3Mn0.GSxnsrXhACZ0P6XbZPrViPY2GXYE58H0lsVO052TWPI
 
 {
-  "title": "Blogilogi2",
-  "author": "Bertti Bloggaaja",
+  "title": "Blogilogiad2",
+  "author": "Bertti Bloggsdaaja",
   "url": "blogi2.com",
   "likes": 100
 }

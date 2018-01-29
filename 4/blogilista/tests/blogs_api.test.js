@@ -3,7 +3,7 @@ const { app, server } = require('../index')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
-const {findAllBlogs, parseBlog, initialBlogs} = require('./test_helper')
+const { findAllBlogs, parseBlog, initialBlogs } = require('./test_helper')
 
 describe('blog-api tests', () => {
   beforeAll(async () => {
@@ -39,12 +39,12 @@ describe('blog-api tests', () => {
 
   describe('Lisäys', () => {
     const newBlog = {
-      title: "Uusi",
-      author: "Blogaaja",
-      url: "blogi.com",
+      title: 'Uusi',
+      author: 'Blogaaja',
+      url: 'blogi.com',
       likes: 1
     }
-  
+
     test('Lisäys palauttaa uuden', async () => {
       const result = await api.post('/api/blogs').send(newBlog).expect(201)
 
@@ -52,52 +52,52 @@ describe('blog-api tests', () => {
     })
 
     const newBlog2 = {
-      title: "Uussi",
-      author: "Blogaaja",
-      url: "blogi.com",
+      title: 'Uussi',
+      author: 'Blogaaja',
+      url: 'blogi.com',
       likes: 1
     }
-  
+
     test('Lisäyksen yhteydessä uusi löytyy kaikista', async () => {
       const inDb = await findAllBlogs()
 
       const result = await api.post('/api/blogs').send(newBlog2)
 
       const newInDb = await findAllBlogs()
-  
+
       expect(inDb.length + 1).toBe(newInDb.length)
-  
+
       expect(newInDb).toContainEqual(newBlog2)
     })
-  
+
     const noLikesBlog = {
-      title: "Uusi2",
-      author: "Blogaajaa",
-      url: "blogi2.com"
+      title: 'Uusi2',
+      author: 'Blogaajaa',
+      url: 'blogi2.com'
     }
-  
+
     test('Jos lisätyllä ei likes-arvoa, sille asetetaan 0', async () => {
       const result = await api.post('/api/blogs').send(noLikesBlog)
-  
+
       expect(result.body.likes).toBe(0)
     })
-  
+
     const noTitleBlog = {
-      author: "Blogaajaa",
-      url: "blogi2.com",
+      author: 'Blogaajaa',
+      url: 'blogi2.com',
       likes: 1
     }
-  
+
     const noUrlBlog = {
-      title: "Uusi2",
-      author: "Blogaajaa",
+      title: 'Uusi2',
+      author: 'Blogaajaa',
       likes: 1
     }
-  
+
     test('Jos blogilla ei nimeä tai urlia, tulee 400', async () => {
       const noTitleResult = await api.post('/api/blogs').send(noTitleBlog)
       const noUrlResult = await api.post('/api/blogs').send(noUrlBlog)
-      
+
       expect(noTitleResult.status).toBe(400)
       expect(noUrlResult.status).toBe(400)
     })
@@ -105,9 +105,9 @@ describe('blog-api tests', () => {
 
   describe('Poisto', () => {
     const removeBlog = {
-      title: "asd",
-      author: "Blogaajaa",
-      url: "blogi2.com",
+      title: 'asd',
+      author: 'Blogaajaa',
+      url: 'blogi2.com',
       likes: 1
     }
 
