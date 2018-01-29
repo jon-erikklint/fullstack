@@ -26,4 +26,33 @@ blogsRouter.post('/', async (request, response) => {
   }
 })
 
+blogsRouter.delete('/:id', async (request, response) => {
+  let id = request.params.id
+
+  try {
+    const result = await Blog.findByIdAndRemove(id)
+  } catch (error) {}
+
+  response.sendStatus(204).end()
+})
+
+blogsRouter.put('/:id', async (request, response) => {
+  let id = request.params.id
+  let body = request.body
+
+  try {
+    const found = await Blog.findByIdAndUpdate(id, {
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes
+    }, {new: true})
+
+    response.json(found)
+  } catch (error) {
+    console.log(error)
+    response.sendStatus(404).end()
+  }
+})
+
 module.exports = blogsRouter

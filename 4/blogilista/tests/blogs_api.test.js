@@ -3,109 +3,134 @@ const { app, server } = require('../index')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const {findAll, parse, initialBlogs} = require('./test_helper')
 
-const initialBlogs = [
-  {
-    title: "Testiblogi1",
-    author: "Testimiäs",
-    url: "testiblogi.com",
-    likes: 1
-  },
-  {
-    title: "Testiblogi2",
-    author: "Testimiäs",
-    url: "testiblogi2.com",
-    likes: 4
-  }
-]
+describe('blog-api tests', () => {
+  beforeAll(async () => {
+    await Blog.remove({})
 
-beforeAll(async () => {
-  await Blog.remove({})
+    await Promise.all(initialBlogs.map(blog => new Blog(blog).save()))
+  })
 
-  const promiseArray = initialBlogs.map(blog => new Blog(blog).save())
-  await Promise.all(promiseArray)
-})
+  test('Kaikkien haku toimii', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
 
-test('Kaikkien haku toimii', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-})
+  test('Kaikkien haku antaa sopivasti', async () => {
+    const blogsInDb = await findAll()
 
-test('Kaikkien haku antaa sopivasti', async () => {
-  const blogs = await api.get('/api/blogs')
+    const blogs = await api.get('/api/blogs')
 
-  expect(blogs.body.length).toBe(initialBlogs.length)
-})
+    expect(blogs.body.length).toBe(blogsInDb.length)
+  })
 
-test('Kaikkien haku sisältää halutut', async () => {
-  const blogs = await api.get('/api/blogs')
+  test('Kaikkien haku sisältää halutut', async () => {
+    const blogsInDb = await findAll()
 
-  let blogHelps = blogs.body.map(blog => blog.title)
+    const blogs = await api.get('/api/blogs')
 
-  expect(blogHelps).toContainEqual(initialBlogs[0].title)
-  expect(blogHelps).toContainEqual(initialBlogs[1].title)
-})
+    let blogHelps = blogs.body.map(parse)
 
-const newBlog = {
-  title: "Uusi",
-  author: "Blogaaja",
-  url: "blogi.com",
-  likes: 1
-}
+    expect(blogHelps).toContainEqual(blogsInDb[0])
+  })
 
-test('Lisäys palauttaa uuden', async () => {
-  const result = await api.post('/api/blogs').send(newBlog).expect(201)
-})
-
-test('Lisäyksen yhteydessä uusi löytyy kaikista', async () => {
-  const result = await api.get('/api/blogs')
-
-  expect(result.body.length).toBe(initialBlogs.length + 1)
+  describe('Lisäys', () => {
+    const newBlog = {
+      title: "Uusi",
+      author: "Blogaaja",
+      url: "blogi.com",
+      likes: 1
+    }
   
-  const blogHelps = result.body.map(blog => ({
-    title: blog.title,
-    author: blog.author,
-    url: blog.url,
-    likes: blog.likes
-  }))
+    test('Lisäys palauttaa uuden', async () => {
+      const result = await api.post('/api/blogs').send(newBlog).expect(201)
 
-  expect(blogHelps).toContainEqual(newBlog)
-})
+      expect(parse(result.body)).toEqual(newBlog)
+    })
 
-const noLikesBlog = {
-  title: "Uusi2",
-  author: "Blogaajaa",
-  url: "blogi2.com"
-}
-
-test('Jos lisätyllä ei likes-arvoa, sille asetetaan 0', async () => {
-  const result = await api.post('/api/blogs').send(noLikesBlog)
-
-  expect(result.body.likes).toBe(0)
-})
-
-const noTitleBlog = {
-  author: "Blogaajaa",
-  url: "blogi2.com",
-  likes: 1
-}
-
-const noUrlBlog = {
-  title: "Uusi2",
-  author: "Blogaajaa",
-  likes: 1
-}
-
-test('Jos blogilla ei nimeä tai urlia, tulee 400', async () => {
-  const noTitleResult = await api.post('/api/blogs').send(noTitleBlog)
-  const noUrlResult = await api.post('/api/blogs').send(noUrlBlog)
+    const newBlog2 = {
+      title: "Uussi",
+      author: "Blogaaja",
+      url: "blogi.com",
+      likes: 1
+    }
   
-  expect(noTitleResult.status).toBe(400)
-  expect(noUrlResult.status).toBe(400)
-})
+    test('Lisäyksen yhteydessä uusi löytyy kaikista', async () => {
+      const inDb = await findAll()
 
-afterAll(() => {
-  server.close()
+      const result = await api.post('/api/blogs').send(newBlog2)
+
+      const newInDb = await findAll()
+  
+      expect(inDb.length + 1).toBe(newInDb.length)
+  
+      expect(newInDb).toContainEqual(newBlog2)
+    })
+  
+    const noLikesBlog = {
+      title: "Uusi2",
+      author: "Blogaajaa",
+      url: "blogi2.com"
+    }
+  
+    test('Jos lisätyllä ei likes-arvoa, sille asetetaan 0', async () => {
+      const result = await api.post('/api/blogs').send(noLikesBlog)
+  
+      expect(result.body.likes).toBe(0)
+    })
+  
+    const noTitleBlog = {
+      author: "Blogaajaa",
+      url: "blogi2.com",
+      likes: 1
+    }
+  
+    const noUrlBlog = {
+      title: "Uusi2",
+      author: "Blogaajaa",
+      likes: 1
+    }
+  
+    test('Jos blogilla ei nimeä tai urlia, tulee 400', async () => {
+      const noTitleResult = await api.post('/api/blogs').send(noTitleBlog)
+      const noUrlResult = await api.post('/api/blogs').send(noUrlBlog)
+      
+      expect(noTitleResult.status).toBe(400)
+      expect(noUrlResult.status).toBe(400)
+    })
+  })
+
+  describe('Poisto', () => {
+    const removeBlog = {
+      title: "asd",
+      author: "Blogaajaa",
+      url: "blogi2.com",
+      likes: 1
+    }
+
+    let addedId
+
+    beforeAll(async () => {
+      const added = await api.post('/api/blogs').send(removeBlog)
+      addedId = added.body._id
+    })
+
+    test('Poisto poistaa', async () => {
+      const beforeInDb = await findAll()
+
+      await api.delete('/api/blogs/'+addedId).expect(204)
+
+      const afterInDb = await findAll()
+
+      expect(afterInDb.length).toBe(beforeInDb.length - 1)
+      expect(afterInDb).not.toContainEqual(removeBlog)
+    })
+  })
+
+  afterAll(() => {
+    server.close()
+  })
 })
