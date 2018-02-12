@@ -22,7 +22,7 @@ class Togglable extends React.Component{
         <div style={onInactive}>
           {this.inactiveRender()}
         </div>
-        <div style={onActive}>
+        <div style={onActive} className="all-visible">
           {this.activeRender()}
         </div>
       </div>

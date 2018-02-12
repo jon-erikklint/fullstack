@@ -1,11 +1,9 @@
 import React from 'react'
 
-import Blog from './components/Blog'
-import BlogInfo from './components/BlogInfo'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import TogglableWhole from './components/TogglableWhole'
+import FullBlogInfo from './components/FullBlogInfo'
 
 import blogService from './services/blogs'
 import login from './services/login'
@@ -155,14 +153,11 @@ class App extends React.Component {
         {this.state.blogs
           .sort((a, b) => b.likes - a.likes)
           .map(blog => (
-          <TogglableWhole key={blog._id}>
-            <Blog blog={blog}/>
-            <BlogInfo 
-              blog={blog} 
-              deletable={this.isAuthorized(blog)}
-              like={this.likeBlog(blog)} 
-              deleteBlog={this.deleteBlog(blog)}/>
-          </TogglableWhole>
+          <FullBlogInfo 
+            blog={blog}
+            deletable={this.isAuthorized(blog)}
+            like={this.likeBlog(blog)} 
+            deleteBlog={this.deleteBlog(blog)}/>
         )
         )}
       </div>

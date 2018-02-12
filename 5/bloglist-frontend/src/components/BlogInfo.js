@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const BlogInfo = ({blog, deletable, like, deleteBlog}) => (
-  <div>
+  <div className='blog-long'>
     <a href={blog.url}>{blog.url}</a>
     <div>{blog.likes} likes <button onClick={like}>like</button></div>
     {blog.user ? <div>added by {blog.user.name}</div> : null}

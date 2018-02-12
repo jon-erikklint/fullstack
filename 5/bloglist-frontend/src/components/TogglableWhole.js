@@ -16,7 +16,7 @@ export default class TogglableWhole extends Togglable{
 
   inactiveRender = () => {
     return (
-      <div onClick={this.setActive} style={this.elementStyle}>
+      <div className="partly-visible" onClick={this.setActive} style={this.elementStyle}>
         {this.props.children[0]}
       </div>
     )
