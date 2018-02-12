@@ -1,8 +1,11 @@
 import React from 'react'
 
 import Blog from './components/Blog'
+import BlogInfo from './components/BlogInfo'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import TogglableWhole from './components/TogglableWhole'
 
 import blogService from './services/blogs'
 import login from './services/login'
@@ -13,7 +16,8 @@ class App extends React.Component {
     this.state = {
       blogs: [],
       username: "",
-      password: ""
+      password: "",
+      user: null
     }
   }
 
@@ -63,18 +67,59 @@ class App extends React.Component {
   }
 
   setNotification = (error, errorType) => {
+    console.log(error, errorType)
     this.setState({error, errorType})
     setTimeout(() => {
       this.setState({error: null, errorType: null})
     }, 3000)
   }
 
+  likeBlog = blog => async () => {
+    const newBlog = {...blog, likes: blog.likes + 1}
+    try {
+      await blogService.update(newBlog)
+
+      this.setState(
+        {
+          blogs: this.state.blogs
+            .map(blog => blog._id === newBlog._id ? newBlog : blog)
+        }
+      )
+    }catch(exception){
+      this.setNotification(`virhe: ${exception}`, 'failure')
+    }
+  }
+
+  deleteBlog = blog => async () => {
+    if(!window.confirm(`delete blog: ${blog.title}?`)) return
+    try {
+      await blogService.delete(blog)
+
+      this.setState(
+        {
+          blogs: this.state.blogs
+            .filter(b => b._id !== blog._id)
+        }
+      )
+    }catch(exception){
+      this.setNotification(`sinulla ei ole oikeuksia blogin poistamiseen`, 'failure')
+    }
+  }
+
+  isAuthorized = blog => {
+    if(!blog.user) return true
+
+    return blog.user.username === this.state.user.username
+  }
+
   render() {
     const user = this.state.user
-    if(user == null) {
-      return (
-        <div>
-          <Notification error={this.state.error} errorType={this.state.errorType}/>
+
+    if(!user) return (
+      <div>
+        <Notification error={this.state.error} errorType={this.state.errorType}/>
+
+        <Togglable buttonLabel="log in">
           <h1>Log in</h1>
           <form onSubmit={this.login}>
             username: 
@@ -93,15 +138,13 @@ class App extends React.Component {
             <br/>
             <input type="submit"/>
           </form>
-        </div>
-      )
-    }
+        </Togglable>
+      </div>
+    );
 
     return (
       <div>
         <Notification error={this.state.error} errorType={this.state.errorType}/>
-
-        <h2>blogs</h2>
         <p>{user.username} logged in</p>
         <button onClick={this.logout}>logout</button>
 
@@ -109,11 +152,21 @@ class App extends React.Component {
         <BlogForm createBlog={this.createBlog}/>
 
         <h2>Blogs</h2>
-        {this.state.blogs.map(blog => 
-          <Blog key={blog._id} blog={blog}/>
+        {this.state.blogs
+          .sort((a, b) => b.likes - a.likes)
+          .map(blog => (
+          <TogglableWhole key={blog._id}>
+            <Blog blog={blog}/>
+            <BlogInfo 
+              blog={blog} 
+              deletable={this.isAuthorized(blog)}
+              like={this.likeBlog(blog)} 
+              deleteBlog={this.deleteBlog(blog)}/>
+          </TogglableWhole>
+        )
         )}
       </div>
-    );
+    )
   }
 }
 
