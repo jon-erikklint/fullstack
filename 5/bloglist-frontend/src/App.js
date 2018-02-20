@@ -25,6 +25,7 @@ class App extends React.Component {
     )
 
     let user = window.localStorage.getItem("user")
+
     if(user) {
       user = JSON.parse(user)
 
@@ -154,12 +155,12 @@ class App extends React.Component {
           .sort((a, b) => b.likes - a.likes)
           .map(blog => (
           <FullBlogInfo 
+            key={blog._id}
             blog={blog}
             deletable={this.isAuthorized(blog)}
             like={this.likeBlog(blog)} 
             deleteBlog={this.deleteBlog(blog)}/>
-        )
-        )}
+          ))}
       </div>
     )
   }
