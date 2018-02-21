@@ -1,40 +1,43 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { vote } from '../reducers/anecdoteReducer'
 import { set, unset } from '../reducers/notificationReducer'
 
 class AnecdoteList extends React.Component {
   like = anecdote => () => {
-    const store = this.props.store
-
-    store.dispatch(vote(anecdote.id))
-    store.dispatch(set('you voted \'' + anecdote.content + '\''))
-    setTimeout(() => {store.dispatch(unset())}, 5000)
+    this.props.vote(anecdote.id)
+    this.props.set('you voted \'' + anecdote.content + '\'')
+    setTimeout(() => {this.props.unset()}, 5000)
   }
 
   render() {
-    const { filter, anecdotes } = this.props.store.getState()
     return (
       <div>
         <h2>Anecdotes</h2>
-        {anecdotes
-          .sort((a, b) => b.votes - a.votes)
-          .filter(anecdote => anecdote.content.includes(filter))
-          .map(anecdote =>
-            <div key={anecdote.id}>
-              <div>
-                {anecdote.content}
-              </div>
-              <div>
-                has {anecdote.votes}
-                <button onClick={this.like(anecdote)}>
-                  vote
-                </button>
-              </div>
+        {this.props.anecdotes.map(anecdote =>
+          <div key={anecdote.id}>
+            <div>
+              {anecdote.content}
             </div>
-          )}
+            <div>
+              has {anecdote.votes}
+              <button onClick={this.like(anecdote)}>
+                vote
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
 }
 
-export default AnecdoteList
+const mapStateToProps = state => {
+  return {
+    anecdotes: state.anecdotes
+      .filter(anecdote => anecdote.content.includes(state.filter))
+      .sort((a, b) => b.votes - a.votes)
+  }
+}
+
+export default connect(mapStateToProps, { vote, set, unset })(AnecdoteList)
