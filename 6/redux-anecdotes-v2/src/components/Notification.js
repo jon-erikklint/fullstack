@@ -2,6 +2,7 @@ import React from 'react'
 
 class Notification extends React.Component {
   render() {
+    const notification = this.props.store.getState().notification
     const style = {
       border: 'solid',
       padding: 10,
@@ -9,7 +10,7 @@ class Notification extends React.Component {
     }
     return (
       <div style={style}>
-        render here notification...
+        {notification}
       </div>
     )
   }

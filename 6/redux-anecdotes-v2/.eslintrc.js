@@ -1,9 +1,14 @@
 module.exports = {
     "env": {
         "browser": true,
-        "es6": true
+        "es6": true,
+        "jest/globals": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
@@ -11,9 +16,8 @@ module.exports = {
         },
         "sourceType": "module"
     },
-    "parser": "babel-eslint",
     "plugins": [
-        "react"
+        "react", "jest"
     ],
     "rules": {
         "indent": [
@@ -31,6 +35,15 @@ module.exports = {
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "no-trailing-spaces": "error",
+        "object-curly-spacing": [
+            "error", "always"
+        ],
+        "arrow-spacing": [
+            "error", { "before": true, "after": true }
+        ],
+        "no-console": 0,
+        "react/prop-types": 0
     }
 };
