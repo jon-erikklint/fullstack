@@ -1,11 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { vote } from '../reducers/anecdoteReducer'
+
+import { update } from '../reducers/anecdoteReducer'
 import { set, unset } from '../reducers/notificationReducer'
 
+import anecdoteService from '../services/anecdotes'
+
 class AnecdoteList extends React.Component {
-  like = anecdote => () => {
-    this.props.vote(anecdote.id)
+  like = anecdote => async() => {
+    const result = await anecdoteService.update({ ...anecdote, votes: anecdote.votes + 1 })
+
+    this.props.update(result)
     this.props.set('you voted \'' + anecdote.content + '\'')
     setTimeout(() => {this.props.unset()}, 5000)
   }
@@ -40,4 +45,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { vote, set, unset })(AnecdoteList)
+export default connect(mapStateToProps, { update, set, unset })(AnecdoteList)
