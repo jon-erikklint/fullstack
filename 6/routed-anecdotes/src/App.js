@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Link, NavLink } from 'react-router-dom'
+import { ListGroup, ListGroupItem, Grid, Row, Col } from 'react-bootstrap'
 
 const Menu = () => {
   const active = {
@@ -29,27 +30,37 @@ const Menu = () => {
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
-    <ul>
+    <ListGroup>
       {anecdotes.map(anecdote => 
-      <li key={anecdote.id} >
+      <ListGroupItem key={anecdote.id} >
         <Link to={'/anecdotes/'+anecdote.id}>{anecdote.content}</Link>
-      </li>)}
-    </ul>  
+      </ListGroupItem>)}
+    </ListGroup>  
   </div>
 )
 
 const About = () => (
-  <div>
-    <h2>About anecdote app</h2>
-    <p>According to Wikipedia:</p>
-    
-    <em>An anecdote is a brief, revealing account of an individual person or an incident. 
-      Occasionally humorous, anecdotes differ from jokes because their primary purpose is not simply to provoke laughter but to reveal a truth more general than the brief tale itself, 
-      such as to characterize a person by delineating a specific quirk or trait, to communicate an abstract idea about a person, place, or thing through the concrete details of a short narrative. 
-      An anecdote is "a story with a point."</em>
+  <Grid>
+    <Row className="showGrid">
+      <h2>About anecdote app</h2>
+    </Row>
+    <Row className="showGrid">
+      <Col xs={6} md={9}>
+        <p>According to Wikipedia:</p>
+        
+        <em>An anecdote is a brief, revealing account of an individual person or an incident. 
+          Occasionally humorous, anecdotes differ from jokes because their primary purpose is not simply to provoke laughter but to reveal a truth more general than the brief tale itself, 
+          such as to characterize a person by delineating a specific quirk or trait, to communicate an abstract idea about a person, place, or thing through the concrete details of a short narrative. 
+          An anecdote is "a story with a point."</em>
 
-    <p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
-  </div>
+        <p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
+      </Col>
+      <Col xs={2} md={3}>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Edsger_Wybe_Dijkstra.jpg/250px-Edsger_Wybe_Dijkstra.jpg">
+        </img>
+      </Col>
+    </Row>
+  </Grid>
 )
 
 const Footer = () => (
@@ -189,7 +200,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
         <Router>
           <div>
             <h1>Software anecdotes</h1>
