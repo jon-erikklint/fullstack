@@ -15,4 +15,14 @@ export const set = notification => ({
 
 export const unset = () => ({ type: 'UNSET' })
 
+export const notify = (message, time) => {
+  return async dispatch => {
+    dispatch(set(message))
+
+    await new Promise(resolve => {setTimeout(resolve, time * 1000)})
+
+    dispatch(unset())
+  }
+}
+
 export default anecdoteReducer

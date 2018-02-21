@@ -2,17 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { update } from '../reducers/anecdoteReducer'
-import { set, unset } from '../reducers/notificationReducer'
-
-import anecdoteService from '../services/anecdotes'
+import { notify } from '../reducers/notificationReducer'
 
 class AnecdoteList extends React.Component {
-  like = anecdote => async() => {
-    const result = await anecdoteService.update({ ...anecdote, votes: anecdote.votes + 1 })
-
-    this.props.update(result)
-    this.props.set('you voted \'' + anecdote.content + '\'')
-    setTimeout(() => {this.props.unset()}, 5000)
+  like = anecdote => () => {
+    this.props.update(anecdote)
+    this.props.notify('you voted \'' + anecdote.content + '\'', 3)
   }
 
   render() {
@@ -45,4 +40,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { update, set, unset })(AnecdoteList)
+export default connect(mapStateToProps, { update, notify })(AnecdoteList)

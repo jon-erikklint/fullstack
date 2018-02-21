@@ -1,3 +1,5 @@
+import anecdoteService from '../services/anecdotes'
+
 const reducer = (store = [], action) => {
   if (action.type==='UPDATE') {
     const old = store.filter(a => a.id !==action.anecdote.id)
@@ -15,19 +17,34 @@ const reducer = (store = [], action) => {
   return store
 }
 
-export const update = anecdote => ({
-  type: 'UPDATE',
-  anecdote
-})
+export const update = anecdote => {
+  return async dispatch => {
+    const result = await anecdoteService.update({ ...anecdote, votes: anecdote.votes + 1 })
+    dispatch({
+      type: 'UPDATE',
+      anecdote: result
+    })
+  }
+}
 
-export const create = content => ({
-  type: 'CREATE',
-  content
-})
+export const create = content => {
+  return async dispatch => {
+    const anecdote = await anecdoteService.save({ content: content, votes: 0 })
+    dispatch({
+      type: 'CREATE',
+      content: anecdote
+    })
+  }
+}
 
-export const init = anecdotes => ({
-  type: 'INIT',
-  anecdotes
-})
+export const init = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch({
+      type: 'INIT',
+      anecdotes
+    })
+  }
+}
 
 export default reducer
