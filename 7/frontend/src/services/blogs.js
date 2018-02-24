@@ -4,10 +4,10 @@ const baseUrl = '/api/blogs'
 let token = null
 
 const setToken = tokenText => {
-  token = 'bearer ' + tokenText
+  token = tokenText ? 'bearer ' + tokenText : null
 }
 const getToken = () => {
-  return {headers: { 'Authorization': token }}
+  return token ? {headers: { 'Authorization': token }} : null
 }
 
 const getAll = () => {

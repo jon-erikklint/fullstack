@@ -1,21 +1,31 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-const Notification = ({error, errorType}) => {
-  if(error == null) {
-    return null
+class Notification extends React.Component{
+  render() {
+    const notification = this.props.notification
+    const notificationType = this.props.notificationType
+  
+    if(!notification) {
+      return null
+    }
+  
+    const notificationClass = notificationType 
+      ? 'success'
+      : 'failure'
+  
+    return (
+      <p className={notificationClass}>
+        {notification}
+      </p>
+    )
   }
-
-  return (
-    <p className={errorType}>
-      {error}
-    </p>
-  )
 }
 
-Notification.propTypes = {
-  error: PropTypes.string,
-  errorType: PropTypes.string
-}
+const mapStateToProps = state => ({
+  notification: state.notification.notification,
+  notificationType: state.notification.notificationType
+})
 
-export default Notification
+export default connect(mapStateToProps, null)(Notification)
