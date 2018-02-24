@@ -1,0 +1,9 @@
+PUT http://localhost:3001/api/blogs/5a6f1b4551c7305755d17ffb
+Content-Type: application/json
+
+{
+  "title": "Blogilogi2",
+  "author": "Bertti Bloggaaja",
+  "url": "blogi2.com",
+  "likes": 10
+}
