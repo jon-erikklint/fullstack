@@ -5,8 +5,9 @@ import {notify} from './notificationReducer'
 const initialState = []
 
 const blogReducer = (state = initialState, action) => {
+  console.log(state, action)
   switch(action.type) {
-    case 'INIT': return action.blogs
+    case 'INIT-BLOGS': return action.blogs
     case 'CREATE': return state.concat(action.blog)
     case 'DELETE': return state.filter(blog => blog._id !== action.blog._id)
     case 'UPDATE': return state.map(blog => blog._id !== action.blog._id
@@ -23,11 +24,12 @@ export const initBlogs = () => {
       const blogs = await blogService.getAll()
 
       dispatch({
-        type: 'INIT',
+        type: 'INIT-BLOGS',
         blogs
       })
     } catch(excpetion) {
-      dispatch(notify("wrong username or password", false))
+      console.log(excpetion)
+      dispatch(notify("blog initialization failed", false))
     }
   }
 }
@@ -41,7 +43,7 @@ export const createBlog = toAdd => {
         type: 'CREATE',
         blog
       })
-    } catch(excpetion) {
+    } catch(exception) {
       dispatch(notify('virhe blogin luonnissa', false))
     }
   }
@@ -56,7 +58,7 @@ export const deleteBlog = blog => {
       type: 'DELETE',
       blog
     })
-    } catch(excpetion) {
+    } catch(exception) {
       dispatch(notify('sinulla ei ole oikeuksia blogin poistamiseen', false))
     }
   }
@@ -71,7 +73,7 @@ export const updateBlog = blog => {
       type: 'UPDATE',
       blog
     })
-    } catch(excpetion) {
+    } catch(exception) {
       dispatch(notify('virhe blogin päivityksessä', false))
     }
   }

@@ -19,10 +19,8 @@ class BlogList extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return ({
+const mapStateToProps = state => ({
   blogs: state.blogs.sort((a, b) => b.likes - a.likes)
 })
-};
 
 export default connect(mapStateToProps, null)(BlogList)

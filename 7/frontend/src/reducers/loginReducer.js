@@ -1,4 +1,5 @@
 import blogService from '../services/blogs'
+import userService from '../services/users'
 import loginService from '../services/login'
 
 import {notify} from './notificationReducer'
@@ -13,6 +14,11 @@ const loginReducer = (state = defaultState, action) => {
   }
 }
 
+const setToken = token => {
+  blogService.setToken(token)
+  userService.setToken(token)
+}
+
 export const initUser = () => {
   return async dispatch => {
     let user = window.localStorage.getItem("user")
@@ -20,7 +26,7 @@ export const initUser = () => {
     if(user) {
       user = JSON.parse(user)
 
-      blogService.setToken(user.token)
+      setToken(user.token)
 
       dispatch({
         type: 'LOGIN',
@@ -39,13 +45,14 @@ export const login = (username, password) => {
       })
 
       window.localStorage.setItem("user", JSON.stringify(user))
-      blogService.setToken(user.token)
+      setToken(user.token)
 
       dispatch({
         type: 'LOGIN',
         user
       })
     } catch(exception) {
+      console.log(exception)
       dispatch(notify("wrong username or password", false))
     }
   }
@@ -54,7 +61,7 @@ export const login = (username, password) => {
 export const logout = () => {
   return async dispatch => {
     window.localStorage.removeItem("user")
-    blogService.setToken(null)
+    setToken(null)
 
     dispatch({
       type: 'LOGOUT'
