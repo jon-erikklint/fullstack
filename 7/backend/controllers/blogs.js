@@ -30,8 +30,8 @@ blogsRouter.post('/', async (request, response) => {
 
     if(!blog.title || !blog.url ) return response.sendStatus(400).end()
 
-    const newblog = await blog.save()
-    await newblog.populate('user', { username: 1, _id: 1, name: 1 })
+    const createdBlog = await blog.save()
+    const newblog = await Blog.findById(createdBlog._id).populate('user', { username: 1, _id: 1, name: 1 })
 
     console.log(newblog)
 

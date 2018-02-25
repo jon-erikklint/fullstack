@@ -5,7 +5,6 @@ import {notify} from './notificationReducer'
 const initialState = []
 
 const blogReducer = (state = initialState, action) => {
-  console.log(state, action)
   switch(action.type) {
     case 'INIT-BLOGS': return action.blogs
     case 'CREATE': return state.concat(action.blog)

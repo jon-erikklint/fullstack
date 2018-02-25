@@ -18,7 +18,7 @@ class BlogInfo extends React.Component {
   isAuthorized = blog => {
     if(!blog.user) return true
 
-    console.log(blog.user.username, this.props.username)
+    console.log(blog, )
 
     return blog.user.username === this.props.username
   }
