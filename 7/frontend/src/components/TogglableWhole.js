@@ -1,7 +1,7 @@
 import React from 'react'
 import Togglable from './Togglable'
 
-export default class TogglableWhole extends Togglable{
+export default class TogglableWhole extends Togglable {
   constructor(props){
     super(props)
 

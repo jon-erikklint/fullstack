@@ -14,8 +14,8 @@ class Togglable extends React.Component{
   }
 
   render = () => {
-    let onActive = {display: this.state.active ? "" : "none"}
-    let onInactive = {display: this.state.active ? "none" : ""}
+    let onActive = {display: this.state.active ? '' : 'none'}
+    let onInactive = {display: this.state.active ? 'none' : ''}
 
     return (
       <div>

@@ -6,8 +6,8 @@ const initial = []
 
 const userReducer = (state = initial, action) => {
   switch(action.type) {
-    case 'INIT-USERS': return action.users
-    default: return state
+  case 'INIT-USERS': return action.users
+  default: return state
   }
 }
 
@@ -21,7 +21,6 @@ export const initUsers = () => {
         users
       })
     } catch(exception) {
-      console.log(exception)
       dispatch(notify('virhe hakiessa käyttäjiä'))
     }
   }

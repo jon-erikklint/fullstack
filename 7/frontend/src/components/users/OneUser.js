@@ -6,7 +6,9 @@ import SmallBlogInfo from './SmallBlogInfo'
 class OneUser extends React.Component {
   render () {
     const user = this.props.user
-    console.log(user)
+    if(!user) {
+      return null
+    }
     return (
       <div>
         <h1>{user.name}</h1>
@@ -15,7 +17,7 @@ class OneUser extends React.Component {
           user.blogs.length > 0 
             ? (
               <ul>
-               {user.blogs.map(blog => (<SmallBlogInfo blog={blog} key={blog._id}/>))}
+                {user.blogs.map(blog => (<SmallBlogInfo blog={blog} key={blog._id}/>))}
               </ul>
             )
             : null

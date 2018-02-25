@@ -8,9 +8,9 @@ class BlogForm extends React.Component{
   constructor(props) {
     super(props)
     this.state = {
-      title: "",
-      author: "",
-      url: ""
+      title: '',
+      author: '',
+      url: ''
     }
   }
 
@@ -25,7 +25,7 @@ class BlogForm extends React.Component{
       author: this.state.author,
       url: this.state.url
     }
-    this.setState({title: "", author: "", url: ""})
+    this.setState({title: '', author: '', url: ''})
     
     this.props.createBlog(blog)
     this.props.notify(
@@ -66,4 +66,4 @@ class BlogForm extends React.Component{
   }
 }
 
-export default connect(null, {notify, createBlog})(BlogForm);
+export default connect(null, {notify, createBlog})(BlogForm)

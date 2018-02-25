@@ -8,9 +8,9 @@ const defaultState = null
 
 const loginReducer = (state = defaultState, action) => {
   switch(action.type) {
-    case 'LOGIN': return action.user
-    case 'LOGOUT': return defaultState
-    default: return state
+  case 'LOGIN': return action.user
+  case 'LOGOUT': return defaultState
+  default: return state
   }
 }
 
@@ -21,7 +21,7 @@ const setToken = token => {
 
 export const initUser = () => {
   return async dispatch => {
-    let user = window.localStorage.getItem("user")
+    let user = window.localStorage.getItem('user')
 
     if(user) {
       user = JSON.parse(user)
@@ -44,7 +44,7 @@ export const login = (username, password) => {
         password
       })
 
-      window.localStorage.setItem("user", JSON.stringify(user))
+      window.localStorage.setItem('user', JSON.stringify(user))
       setToken(user.token)
 
       dispatch({
@@ -52,15 +52,14 @@ export const login = (username, password) => {
         user
       })
     } catch(exception) {
-      console.log(exception)
-      dispatch(notify("wrong username or password", false))
+      dispatch(notify('wrong username or password', false))
     }
   }
 }
 
 export const logout = () => {
   return async dispatch => {
-    window.localStorage.removeItem("user")
+    window.localStorage.removeItem('user')
     setToken(null)
 
     dispatch({

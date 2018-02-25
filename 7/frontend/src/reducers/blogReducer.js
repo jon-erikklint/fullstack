@@ -6,14 +6,14 @@ const initialState = []
 
 const blogReducer = (state = initialState, action) => {
   switch(action.type) {
-    case 'INIT-BLOGS': return action.blogs
-    case 'CREATE': return state.concat(action.blog)
-    case 'DELETE': return state.filter(blog => blog._id !== action.blog._id)
-    case 'UPDATE': return state.map(blog => blog._id !== action.blog._id
-      ? blog
-      : action.blog
-    )
-    default: return state
+  case 'INIT-BLOGS': return action.blogs
+  case 'CREATE': return state.concat(action.blog)
+  case 'DELETE': return state.filter(blog => blog._id !== action.blog._id)
+  case 'UPDATE': return state.map(blog => blog._id !== action.blog._id
+    ? blog
+    : action.blog
+  )
+  default: return state
   }
 }
 
@@ -27,8 +27,7 @@ export const initBlogs = () => {
         blogs
       })
     } catch(excpetion) {
-      console.log(excpetion)
-      dispatch(notify("blog initialization failed", false))
+      dispatch(notify('blog initialization failed', false))
     }
   }
 }
@@ -51,12 +50,12 @@ export const createBlog = toAdd => {
 export const deleteBlog = blog => {
   return async dispatch => {
     try {
-    await blogService.delete(blog)
+      await blogService.delete(blog)
 
-    dispatch({
-      type: 'DELETE',
-      blog
-    })
+      dispatch({
+        type: 'DELETE',
+        blog
+      })
     } catch(exception) {
       dispatch(notify('sinulla ei ole oikeuksia blogin poistamiseen', false))
     }
@@ -66,12 +65,12 @@ export const deleteBlog = blog => {
 export const updateBlog = blog => {
   return async dispatch => {
     try {
-    await blogService.update(blog)
+      await blogService.update(blog)
 
-    dispatch({
-      type: 'UPDATE',
-      blog
-    })
+      dispatch({
+        type: 'UPDATE',
+        blog
+      })
     } catch(exception) {
       dispatch(notify('virhe blogin päivityksessä', false))
     }

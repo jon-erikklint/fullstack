@@ -10,8 +10,8 @@ class Login extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: "",
-      password: ""
+      username: '',
+      password: ''
     }
   }
 
@@ -23,10 +23,10 @@ class Login extends React.Component {
     event.preventDefault()
     
     this.props.login(this.state.username, this.state.password)
-    this.setState({username: "", password: ""})
+    this.setState({username: '', password: ''})
   }
 
-  logout = (event) => {
+  logout = () => {
     this.props.logout()
   }
 
@@ -34,31 +34,31 @@ class Login extends React.Component {
     const user = this.props.user
     return user
       ? (
-      <div>
-        <p>{user.username} logged in</p>
-        <button onClick={this.logout}>logout</button>
-      </div>)
+        <div>
+          <span>{user.username} logged in</span>
+          <button onClick={this.logout}>logout</button>
+        </div>)
       : (
-      <Togglable buttonLabel="log in">
-        <h1>Log in</h1>
-        <form onSubmit={this.login}>
-          username: 
-          <input
-            type="text"
-            name="username"
-            value={this.state.username}
-            onChange={this.handleChange}/>
-          <br/>
-            password:
-          <input
-            type="password"
-            name="password"
-            value={this.state.password}
-            onChange={this.handleChange}/>
-          <br/>
-          <input type="submit"/>
-        </form>
-      </Togglable>)
+        <Togglable buttonLabel="log in">
+          <h1>Log in</h1>
+          <form onSubmit={this.login}>
+            username: 
+            <input
+              type="text"
+              name="username"
+              value={this.state.username}
+              onChange={this.handleChange}/>
+            <br/>
+              password:
+            <input
+              type="password"
+              name="password"
+              value={this.state.password}
+              onChange={this.handleChange}/>
+            <br/>
+            <input type="submit"/>
+          </form>
+        </Togglable>)
   }
 }
 

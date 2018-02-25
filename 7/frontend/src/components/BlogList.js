@@ -7,13 +7,13 @@ class BlogList extends React.Component {
   render() {
     return (
       <div>
-      <h2>Blogs</h2>
-      {this.props.blogs
-        .map(blog => (
-        <FullBlogInfo 
-          key={blog._id}
-          blog={blog}/>
-        ))}
+        <h2>Blogs</h2>
+        {this.props.blogs
+          .map(blog => (
+            <FullBlogInfo 
+              key={blog._id}
+              blog={blog}/>
+          ))}
       </div>
     )
   }
